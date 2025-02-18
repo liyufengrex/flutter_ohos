@@ -1,0 +1,53 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/rex/.ohos/config/default_ohos_Itbjdwdqk-En-qvdrBvEeDTWhvSaISx2gjhb1SzCG88=.cer",
+          "storePassword": "0000001B1EE8E4B9111ED5890932C837D51A206FACB7EFD4DA2ADF3810BB9EE4105BDBDFB4E40054780947",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B9663CDCF31EF029B6024D175C2EAF07ECB5248A5949928ADD6AEBB9B4571D76DFF97964B3038C1",
+          "profile": "/Users/rex/.ohos/config/default_ohos_Itbjdwdqk-En-qvdrBvEeDTWhvSaISx2gjhb1SzCG88=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/rex/.ohos/config/default_ohos_Itbjdwdqk-En-qvdrBvEeDTWhvSaISx2gjhb1SzCG88=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fluttertoast",
+      "srcPath": "../../../../../../../.pub-cache/git/flutter_fluttertoast-5a752a422345c9223b60dd5e6a0c941ca03fdcbd/ohos",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
