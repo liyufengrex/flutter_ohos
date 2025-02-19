@@ -1,8 +1,6 @@
 # 现有 Flutter 项目支持鸿蒙示例
 
-## 引言
-
-本文结合实际代码讲述如何改造现有 Flutter 项目，适配鸿蒙平台。
+![](https://upload-images.jianshu.io/upload_images/25776880-f6bf0857190712a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 通过模块化，鸿蒙壳工程，结合 FVM 管理多版本 Flutter SDK，保持原 Flutter 代码纯净，最小化修改，完成鸿蒙化的适配示例。
 
@@ -94,6 +92,10 @@ dependencies:
 
 ![image.png](https://upload-images.jianshu.io/upload_images/25776880-2e4a72a5291f14de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+在 Android、IOS 等平台使用通用版本的 Flutter SDK 即可
+```dart
+fvm use 3.3.10
+```
 点击运行，效果如下：
 
 ![image.png](https://upload-images.jianshu.io/upload_images/25776880-e8e7c66c24ce01e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -105,13 +107,13 @@ dependencies:
 
 首先，我们需要在 `/apps` 目录下创建一个鸿蒙壳工程
 
-#### + 第一步，使用 FVM 将 Flutter 版本切换到鸿蒙化的版本
++ #### 第一步，使用 FVM 将 Flutter 版本切换到鸿蒙化的版本
 
 ```dart
 fvm use custom_3.22.0
 ```
 
-#### + 第二步，进入 `/apps` 目录，使用命令行创建 `app_ohos` 项目
++ #### 第二步，进入 `/apps` 目录，使用命令行创建 `app_ohos` 项目
 
 ```dart
 fvm flutter create --template app --platforms ohos --org com.rex.flutter app_ohos
@@ -119,7 +121,7 @@ fvm flutter create --template app --platforms ohos --org com.rex.flutter app_oho
 
 ![image.png](https://upload-images.jianshu.io/upload_images/25776880-7c0c1ff4f3dd0a0d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#### + 添加依赖项
++ #### 添加依赖项
 
 ```dart
 dependencies:
@@ -130,38 +132,40 @@ dependencies:
     path: '../../module/home_module'
   ... 省略其他  
 ```
+同样，通过依赖 `home_module` 显示封装的首页组件
+![image.png](https://upload-images.jianshu.io/upload_images/25776880-f48fee58e3aa9f58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#### + 三方库鸿蒙化适配
++ #### 三方库鸿蒙化适配
 
-通过 dependency_overrides 来替换鸿蒙化的三方库，以组件内用到的 `fluttertoast` 为例
+通过 `dependency_overrides` **替换需要鸿蒙化的底层模块中用到的三方库**，例如`app_ohos`依赖底层库`home_module`中使用到了`fluttertoast`，该库需要进行鸿蒙化替换。
 
 ```dart
+// app_ohos/pubsec.yaml 
 dependency_overrides:
   fluttertoast:
     git:
       url: "https://gitee.com/openharmony-sig/flutter_fluttertoast.git"
       ref: "master"
 ```
+注意点：
+> 1. app_ohos/pubsec.yaml 中的 dependency_overrides, 仅添加需要鸿蒙化的三方库
+> 
+> 2. 如何判断三方库是否需要鸿蒙化，简而言之，如果三方库由纯 Dart 实现，则不需要单独适配，直接使用；如果三方库依赖系统底层实现，则需要鸿蒙化适配。
+> 
+> 3. 三方库的适配情况，可以查询 Gitee/Github，或者查阅表格 [Flutter三方库适配计划](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
 
-> app_ohos/pubsec.yaml 中的 dependency_overrides, 仅添加需要鸿蒙化的三方库
-> 如何判断三方库是否需要鸿蒙化，简而言之，如果三方库由纯 Dart 实现，则不需要单独适配，直接使用；如果三方库依赖系统底层实现，则需要鸿蒙化适配。
-> 三方库的适配情况，可以查询 Gitee/Github，或者查阅表格 [Flutter三方库适配计划](https://docs.qq.com/sheet/DVVJDWWt1V09zUFN2)
++ #### 运行调试
 
-#### + 运行调试
-
-用 Deveco 打开apps/app_ohos/ohos 目录。
+用 Deveco 打开apps/app\_ohos/ohos 目录。
 
 在 Deveco 左上角 打开 File -> Project Structure..., 点击 Siging Configs, 勾选 Automatically generate signature, 对鸿蒙项目签名。
 
-在 ohos_app 目录下，使用 fvm flutter run，或者点击运行按钮，运行flutter项目。
+在 app_ohos 目录下，使用 fvm flutter run，或者点击运行按钮，运行flutter项目。
 
 PS1：注意添加应用权限
-
 ![image.png](https://upload-images.jianshu.io/upload_images/25776880-e4b04881b10cd347.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-
 PS2：没有真机的同学可以使用模拟器运行
-
 ![image.png](https://upload-images.jianshu.io/upload_images/25776880-4a19a5cd18d3efa5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 运行效果如下：
@@ -174,5 +178,8 @@ PS2：没有真机的同学可以使用模拟器运行
 1. 通过 FVM 管理多个 Flutter SDK 版本，仅在鸿蒙调测打包时，切换到 ohos-flutter SDK
 2. 通过 apps 壳工程，将鸿蒙化适配的代码，尽量在 app_ohos 项目中完成。通过 pub 包管理的 `dependency_overrides` 配置，逐个替换鸿蒙化的三方库
 3. Flutter 项目进行模块化、组件化、插件化拆分，职责分离，平台抽象，不同平台组合打包，有效解决平台不一致问题
+
+
+
 
 
